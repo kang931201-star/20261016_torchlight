@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>토치라이트: 인피니트 x 피카플레이 미션 이벤트</title>
+  <meta name="description" content="피카 PC방 또는 개인 PC(크래프트박스)에서 토치라이트: 인피니트를 매일 1시간 플레이하고 1,000M 받아가세요.">
+  <meta name="keywords" content="토치라이트,토치라이트 인피니트,크래프트박스,피카플레이,이벤트,마일리지">
+  <meta name="author" content="TORCHLIGHT: INFINITE × PICAPLAY">
+  <meta name="theme-color" content="#0b0918">
+
+  <!-- 파비콘 (원본: assets/icon.webp) -->
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/webp" sizes="360x360" href="assets/icon.webp">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ko_KR">
+  <meta property="og:site_name" content="TORCHLIGHT: INFINITE × PICAPLAY">
+  <meta property="og:title" content="토치라이트: 인피니트 x 피카플레이 미션 이벤트">
+  <meta property="og:description" content="PC방, 집 어디에서든 즐기고 보상까지 챙겨라! 매일 1시간 플레이하고 1,000M 받아가세요.">
+  <meta property="og:url" content="https://ics.mediaweb.co.kr/_event/20261016_torchlight/index.html" />
+  <meta property="og:image" content="https://ics.mediaweb.co.kr/_event/20261016_torchlight/assets/Thumbnail_800x400.jpg">
+  <meta property="og:image:alt" content="토치라이트: 인피니트 x 피카플레이 미션 이벤트">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="토치라이트: 인피니트 x 피카플레이 미션 이벤트">
+  <meta name="twitter:description" content="PC방, 집 어디에서든 즐기고 보상까지 챙겨라! 매일 1시간 플레이하고 1,000M 받아가세요.">
+  <meta name="twitter:url" content="https://ics.mediaweb.co.kr/_event/20261016_torchlight/index.html" />
+  <meta name="twitter:image" content="https://ics.mediaweb.co.kr/_event/20261016_torchlight/assets/Thumbnail_1200x630.jpg">
+  <meta name="twitter:image:alt" content="토치라이트: 인피니트 x 피카플레이 미션 이벤트">
+
+  <!-- 폰트 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,500;0,700;1,700&family=Black+Han+Sans&display=swap">
+
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<header class="cb-header" id="top">
+  <div class="cb-header__inner">
+    <div class="cb-header__notice-wrap">
+      <!-- PC방 토글 -->
+      <button class="toggle-btn" type="button" id="pcRoomToggle" data-state="off" aria-label="PC방 모드 토글">
+        <img class="toggle-btn__img" src="assets/off=off.webp" alt="PC방 모드 OFF" loading="lazy" />
+      </button>
+      <p class="cb-header__notice">
+        본 이벤트는 <a href="https://picaplay.com/pcbang/main.do" target="_blank" rel="noopener noreferrer"><u>피카플레이 가맹 PC방</u></a> 또는 <b>개인PC에서</b> <a href="https://www.craftbox.co.kr/" target="_blank" rel="noopener noreferrer"><u>크래프트박스 설치</u></a> 후 참여 가능합니다.
+      </p>
+    </div>
+    <button class="btn-share" type="button" id="btnShare" aria-label="공유하기">
+      <img src="assets/share_icon.svg" alt="share icon" />
+      <span>공유하기</span>
+    </button>
+  </div>
+</header>
+
+<!-- =========================================================
+     01. HERO (KV)
+     ========================================================= -->
+<section class="hero">
+  <picture>
+    <source media="(max-width: 768px)" srcset="assets/kv_m.webp">
+    <img class="hero__bg" src="assets/kv.webp" alt="">
+  </picture>
+  <div class="hero__shade"></div>
+
+  <div class="hero__inner">
+    <div class="hero__logos">
+      <img class="hero__logo-torch" src="assets/logo-torchlight.webp" alt="TORCHLIGHT INFINITE">
+      <span class="hero__logo-x">✕</span>
+      <img class="hero__logo-craft" src="assets/logo-craftbox.png" alt="CRAFTBOX">
+    </div>
+
+    <div class="hero__copy">
+      <h1 class="hero__title">
+        <span class="hero__title-sm">PC방, 집 어디에서든 즐기고,</span>
+        <span class="hero__title-lg">보상까지 챙겨라!</span>
+      </h1>
+      <p class="hero__desc">
+        피카 PC방 또는 개인용 크래프트박스 설치 PC에서<br>
+        토치라이트: 인피니트를 플레이하고 보상을 획득하세요.
+      </p>
+    </div>
+
+    <dl class="hero__info">
+      <div class="hero__info-item">
+        <dt>이벤트 기간</dt>
+        <dd class="num">2026.10.16 ~ 2026.10.23</dd>
+      </div>
+      <div class="hero__info-item">
+        <dt>참여 대상</dt>
+        <dd>피카플레이 회원</dd>
+      </div>
+    </dl>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     02. REWARD (1,000M)
+     ========================================================= -->
+<section class="section reward">
+  <div class="reward__glow"></div>
+
+  <div class="inner center">
+    <div class="sec-head">
+      <h2 class="reward__title">
+        <span class="reward__title-sm">PC방에서도, 집에서도! 매일 <em>1시간 플레이</em>하고</span>
+        <span class="reward__title-lg">1,000M 받아가세요</span>
+      </h2>
+      <img class="divider" src="assets/divider.webp" alt="">
+    </div>
+
+    <div class="mileage-card">
+      <div class="mileage-card__body">
+        <img class="mileage-card__bg" src="assets/kv_card.webp" alt="">
+        <div class="mileage-card__top">
+          <span class="mileage-card__brand">PICAPLAY MILEAGE</span>
+          <span class="mileage-card__badge">1일 1회</span>
+        </div>
+        <div class="mileage-card__ticket">
+          <img src="assets/mileage-1000.png" alt="피카플레이 마일리지 1,000">
+        </div>
+        <div class="mileage-card__bottom">
+          <span>토치라이트: 인피니트 1시간 플레이</span>
+          <span>유효기간 90일</span>
+        </div>
+      </div>
+    </div>
+
+    <p class="reward__note">일일 1회 미션 완료 시 1,000M 지급 · 소진 시까지 참여 가능</p>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     03. HOW TO (참여방법) - 탭
+     ========================================================= -->
+<section class="section howto">
+  <div class="inner">
+    <div class="sec-head center">
+      <h2 class="sec-title">이벤트 참여방법</h2>
+      <img class="divider" src="assets/divider.webp" alt="">
+
+      <div class="tabs" role="tablist">
+        <button class="tabs__btn is-active" data-tab="pc" role="tab">PC방 참여방법</button>
+        <button class="tabs__btn" data-tab="home" role="tab">개인 PC 참여방법</button>
+      </div>
+    </div>
+
+    <!-- PC방 탭 -->
+    <ol class="steps is-active" data-panel="pc">
+      <li class="step">
+        <div class="step__img"><img src="assets/step01-pc.webp" alt=""></div>
+        <div class="step__body">
+          <span class="step__no">01</span>
+          <h3 class="step__title">피카플레이 회원으로 로그인</h3>
+          <p class="step__desc">피카 PC방 좌석에서 피카플레이 회원으로 로그인하세요.</p>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step__img"><img src="assets/step02.webp" alt=""></div>
+        <div class="step__body">
+          <span class="step__no">02</span>
+          <h3 class="step__title">토치라이트: 인피니트 플레이</h3>
+          <p class="step__desc">하루 1시간 이상 플레이하면 미션 달성. 소진 시까지 누적 보상 획득 가능.</p>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step__img"><img src="assets/step03.webp" alt=""></div>
+        <div class="step__body">
+          <span class="step__no">03</span>
+          <h3 class="step__title">마일리지 보상 확인</h3>
+          <p class="step__desc">피카플레이 APP 또는 크래프트박스 마이페이지에서 지급 내역을 확인하세요.</p>
+        </div>
+      </li>
+    </ol>
+
+    <!-- 개인 PC 탭 -->
+    <ol class="steps" data-panel="home">
+      <li class="step">
+        <div class="step__img"><img src="assets/step01-home.webp" alt=""></div>
+        <div class="step__body">
+          <span class="step__no">01</span>
+          <h3 class="step__title">크래프트박스 설치</h3>
+          <p class="step__desc">개인 PC에 크래프트박스를 설치하고 피카플레이 회원으로 로그인하세요.</p>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step__img"><img src="assets/step02.webp" alt=""></div>
+        <div class="step__body">
+          <span class="step__no">02</span>
+          <h3 class="step__title">토치라이트: 인피니트 플레이</h3>
+          <p class="step__desc">하루 1시간 이상 플레이하면 미션 달성. 소진 시까지 누적 보상 획득 가능.</p>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step__img"><img src="assets/step03.webp" alt=""></div>
+        <div class="step__body">
+          <span class="step__no">03</span>
+          <h3 class="step__title">마일리지 보상 확인</h3>
+          <p class="step__desc">피카플레이 APP 또는 크래프트박스 마이페이지에서 지급 내역을 확인하세요.</p>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     04. MILEAGE (마일리지 사용처)
+     ========================================================= -->
+<section class="section mileage">
+  <div class="inner">
+    <div class="sec-head center">
+      <h2 class="sec-title">마일리지 사용처</h2>
+      <img class="divider" src="assets/divider.webp" alt="">
+    </div>
+
+    <div class="use-grid">
+      <div class="use-card">
+        <p class="use-card__text">피카 가맹 PC방에서<br><em>요금제 및 먹거리</em> 결제</p>
+        <div class="use-card__img">
+          <img src="assets/mileage-offline.webp" alt="PC방 요금제 및 먹거리 결제 화면" style="max-width:440px">
+        </div>
+      </div>
+      <div class="use-card">
+        <p class="use-card__text">크래프트박스 또는 피카플레이 APP에서<br><em>모바일 문화상품권</em>으로 교환</p>
+        <div class="use-card__img">
+          <img src="assets/mileage-online.webp" alt="문화상품권 교환 화면" style="max-width:340px">
+        </div>
+      </div>
+    </div>
+
+    <div class="mileage__foot center">
+      <ul class="mileage__notes">
+        <li>※ 미션으로 지급되는 마일리지의 유효기간은 90일입니다.</li>
+        <li>※ 일부 매장에서는 마일리지 사용이 제한될 수 있습니다.</li>
+      </ul>
+      <a class="btn-primary" href="https://ics.mediaweb.co.kr/_event/20231115_picapayGuide_APP/picapayGuide1.html" target="_blank">PC방 사용 가이드 <span>→</span></a>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     05. NOTICE (유의사항) - 아코디언
+     ========================================================= -->
+<section class="notice">
+  <div class="inner">
+    <button class="notice__toggle" aria-expanded="true">
+      유의사항 <span class="notice__icon">−</span>
+    </button>
+
+    <ul class="notice__list">
+      <li>본 이벤트는 피카플레이 회원 전용 이벤트입니다. <a href="https://blog.naver.com/playcraftbox/223126575684" target="_blank">[연동 방법]</a></li>
+      <li>본 이벤트는 PC방 또는 개인 PC에서 모두 참여가 가능하며, 중복 참여는 불가합니다.</li>
+      <li>본 이벤트는 PC방에서 피카플레이 계정으로 로그인 후 참여가 가능하며, 개인 PC에서는 크래프트박스 로그인 후 참여 가능합니다.</li>
+      <li>본 이벤트는 계정당 1일 1회, 마일리지 소진 시까지 참여 가능합니다.</li>
+      <li>본 이벤트는 마일리지 소진 현황에 따라 조기 종료 또는 연장될 수 있습니다.</li>
+      <li>이벤트 참여 전 크래프트박스 → 혜택박스 → 미션상세팝업 내 이벤트 참여 가능 여부를 확인해 주세요.</li>
+      <li>게임 플레이 시간 반영은 최대 30분 정도의 지연 시간이 발생할 수 있습니다.</li>
+      <li>지급받은 마일리지는 90일의 유효기간 경과 시 자동 소멸됩니다.</li>
+      <li>이벤트 종료 표기는 실시간으로 반영되지 않을 수 있습니다.</li>
+      <li>부정한 방법으로 이벤트에 참여한 이력이 확인될 경우 지급된 보상이 회수 될 수 있습니다.</li>
+      <li>미션 마일리지 오프라인 사용은 ‘마일리지 가맹PC방’에서 먹거리, 요금제 구매 시 사용 가능합니다.</li>
+      <li>미션 마일리지 온라인 사용은 피카플레이 APP 또는 크래프트박스 혜택박스에서 모바일 문화상품권으로 교환 가능합니다.</li>
+      <li>이벤트 관련 문의 및 불편사항은 피카플레이 또는 크래프트박스 고객센터 1:1 문의를 이용해 주세요.</li>
+    </ul>
+  </div>
+</section>
+
+
+<footer class="footer">TORCHLIGHT: INFINITE ✕ PICAPLAY</footer>
+
+<!-- 공유 모달 + 토스트 + 플로팅 버튼(공유 / TOP) -->
+<div id="shareModal" class="share-modal" role="dialog" aria-modal="true" aria-labelledby="shareModalTitle" aria-hidden="true">
+  <div class="share-modal__dialog" role="document">
+    <button type="button" class="share-modal__close" id="shareModalClose" aria-label="닫기">&times;</button>
+    <h2 id="shareModalTitle" class="share-modal__title">공유하기</h2>
+    <div class="share-modal__grid">
+      <button type="button" class="share-item share-item--kakao" data-share="kakao" aria-label="카카오톡으로 공유">
+        <span class="share-item__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3C6.48 3 2 6.58 2 11c0 2.83 1.86 5.32 4.66 6.73L5.5 21.5l4.2-2.47c.76.11 1.54.17 2.3.17 5.52 0 10-3.58 10-8S17.52 3 12 3z"/></svg>
+        </span>
+        <span class="share-item__label">카카오톡</span>
+      </button>
+      <button type="button" class="share-item share-item--facebook" data-share="facebook" aria-label="페이스북으로 공유">
+        <span class="share-item__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-8h2.7l.4-3.1h-3.1V7.9c0-.9.3-1.5 1.6-1.5h1.7V3.6c-.3 0-1.3-.1-2.5-.1-2.4 0-4.1 1.5-4.1 4.2v2.3H7.5v3.1h2.6V21h3.4z"/></svg>
+        </span>
+        <span class="share-item__label">페이스북</span>
+      </button>
+      <button type="button" class="share-item share-item--twitter" data-share="twitter" aria-label="트위터(X)로 공유">
+        <span class="share-item__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.451-6.231zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
+        </span>
+        <span class="share-item__label">트위터</span>
+      </button>
+      <button type="button" class="share-item share-item--naver" data-share="naver" aria-label="네이버 블로그로 공유">
+        <span class="share-item__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.91 12.03 9.94 6H6v12h4.09v-6.03L14.06 18H18V6h-4.09z"/></svg>
+        </span>
+        <span class="share-item__label">네이버블로그</span>
+      </button>
+      <button type="button" class="share-item share-item--instagram" data-share="instagram" aria-label="인스타그램 공유용 URL 복사">
+        <span class="share-item__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        </span>
+        <span class="share-item__label">인스타그램</span>
+      </button>
+      <button type="button" class="share-item share-item--copy" data-share="copy" aria-label="URL 복사">
+        <span class="share-item__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        </span>
+        <span class="share-item__label">URL 복사</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div id="copyToast" class="copy-toast" role="status" aria-live="polite">클립보드에 복사되었습니다.</div>
+<div class="mobile-fab" role="group" aria-label="모바일 플로팅 버튼">
+  <button class="mobile-fab__btn" type="button" id="btnShareFloating" aria-label="공유하기">
+    <img src="assets/share_icon.svg" alt="" aria-hidden="true" loading="lazy" />
+  </button>
+  <button class="mobile-fab__btn mobile-fab__btn--top" type="button" id="btnScrollTop" aria-label="맨 위로">
+    <span aria-hidden="true">TOP</span>
+  </button>
+</div>
+
+<script src="js/script.js"></script>
+
+<!-- == PC방 ON/OFF (백엔드 연동) == -->
+<script>
+(function () {
+  // 퍼블 setPcRoomToggleState() 가 전역이면 그대로 쓰고(이미지 경로를 퍼블과 한 곳에서 관리),
+  // share.js IIFE 안에 갇혀 있으면 같은 규칙(이미지 src / data-state 교체)을 여기서 다시 구현한다.
+  function setPcroomBadge(isOn) {
+    window._isPcroom = isOn;
+    if (typeof window.setPcRoomToggleState === 'function') {
+      window.setPcRoomToggleState(isOn);
+      return;
+    }
+    var btn = document.getElementById('pcRoomToggle');
+    if (!btn) { return; }
+    var img = btn.querySelector('.toggle-btn__img');
+    btn.dataset.state = isOn ? 'on' : 'off';
+    if (img) {
+      img.src = isOn ? 'assets/off=on.webp' : 'assets/off=off.webp';
+      img.alt = isOn ? 'PC방 모드 ON' : 'PC방 모드 OFF';
+    }
+  }
+  // CheckPicapayPcbang.ashx 는 window.pica({ data: { name: "1" } }) 형태로 응답한다 (1 = PC방)
+  window.pica = function (c) {
+    setPcroomBadge(!!(c && c.data && String(c.data.name) === '1'));
+  };
+  var url = "//tech.mediaweb.co.kr/PM/WS/CheckPicapayPcbang.ashx?format=jsonp";
+  if (document.domain.indexOf("prewww.pcbang.com") >= 0 ||
+      document.domain.indexOf("orc.image.picaplay.com") >= 0 ||
+      document.domain.indexOf("orc.ics.mediaweb.co.kr") >= 0) {
+    url = "//prewww-tech.mediaweb.co.kr/PM/WS/CheckPicapayPcbang.ashx?format=jsonp";
+  }
+  setPcroomBadge(false);   /* 응답 전 / 호출 실패 시 기본값 OFF */
+  try {
+    var s = document.createElement('script');
+    s.src = url;
+    s.onerror = function () { setPcroomBadge(false); };
+    document.head.appendChild(s);
+  } catch (e) { setPcroomBadge(false); }
+})();
+</script>
+</body>
+</html>

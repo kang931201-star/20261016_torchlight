@@ -1,0 +1,2451 @@
+/* ============================================================
+   TABLE OF CONTENTS
+   ------------------------------------------------------------
+   1.  Variables & base reset
+   2.  Shared components (container, section head, buttons, pattern card)
+   3.  Hero / KV (01, id="top")
+   4.  Reward section (02, id="reward")
+   5.  How-to section (03, id="howto")
+   6.  Mileage section (04, id="mileage")
+   7.  Notice accordion (05, id="notice")
+   8.  Footer
+   9.  Motion & interaction (pairs with assets/js/script.js)
+   10. Share header kit (pairs with assets/js/share.js)
+   ============================================================ */
+
+:root {
+  --color-bg: #050c17;
+  --color-bg-alt: #060f1c;
+  --color-card: #0a1828;
+  --color-cyan: #3ee0ff;
+  --color-cyan-hover: #8cf0ff;
+  /* Point colour — used sparingly for the key reward / CTA moments only */
+  --color-point: rgb(238, 255, 65);
+  --color-point-hover: rgb(245, 255, 140);
+  --glow-point: rgba(238, 255, 65, 0.4);
+  --color-ink: #041321;
+  --color-text: #e6f2fb;
+  --color-text-sub: #b9cadb;
+  --color-caption: #9fb3c6;
+  --color-muted: #7f97ad;
+  --color-white: #ffffff;
+
+  --line-cyan-08: rgba(62, 224, 255, 0.08);
+  --line-cyan-18: rgba(62, 224, 255, 0.18);
+  --line-cyan-25: rgba(62, 224, 255, 0.25);
+  --line-cyan-50: rgba(62, 224, 255, 0.5);
+  --glow-cyan: rgba(62, 224, 255, 0.4);
+
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+  --space-6: 48px;
+  --space-section: 96px;
+
+  --transition-fast: 200ms ease;
+  --font-display: 'Paperlogy', 'Pretendard', -apple-system, sans-serif;
+  --font-body: 'Pretendard', -apple-system, sans-serif;
+  --font-tech: 'Chakra Petch', 'Pretendard', sans-serif;
+
+  /* 공유하기 헤더 키트 */
+  --header-h: 56px;
+  --hero-logo-w: clamp(150px, 16vw, 270px); /* logo-crop is 620×208 → height = width × 0.336 */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* anchor jumps land below the sticky share header */
+  scroll-padding-top: var(--header-h);
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  /* Korean wraps at spaces, not mid-word */
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: var(--color-cyan);
+  text-decoration: none;
+  transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+a:hover {
+  color: #9bf0ff;
+}
+
+.page {
+  min-height: 100vh;
+  overflow-x: hidden;
+  color: var(--color-text);
+  background: var(--color-bg);
+  letter-spacing: -0.01em;
+}
+
+/* ============================================================
+   SHARED COMPONENTS
+   ============================================================ */
+.container {
+  position: relative;
+  max-width: 1080px;
+  margin-inline: auto;
+}
+
+.accent {
+  color: var(--color-cyan);
+}
+
+.sec-head {
+  text-align: center;
+}
+
+.sec-head__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(26px, 3.8vw, 42px);
+  font-weight: 800;
+  line-height: 1.3;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+/* 제목 윗줄(보조 문구)은 작게, 아랫줄 강조는 그대로 */
+.sec-head__lead {
+  display: block;
+  margin-bottom: 0.15em;
+  font-size: 0.68em;
+}
+
+/* 모바일: 윗줄을 두 줄로 나누고(br-mo) 조금 키워서 3줄 제목으로 */
+@media (max-width: 480px) {
+  .sec-head__lead {
+    margin-bottom: 0.12em;
+    font-size: 0.8em;
+    line-height: 1.25;
+  }
+}
+
+.sec-head__desc {
+  margin: 14px 0 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--color-caption);
+}
+
+.sec-head__desc b {
+  color: var(--color-text);
+}
+
+/* Buttons */
+.btn {
+  font-family: var(--font-display);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 54px;
+  font-size: 16px;
+}
+
+.btn--primary {
+  padding: 0 30px;
+  background: var(--color-point);
+  color: var(--color-ink);
+  font-weight: 800;
+  clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+}
+
+.btn--primary:hover {
+  background: var(--color-point-hover);
+  color: var(--color-ink);
+}
+
+.btn--line {
+  padding: 0 26px;
+  border: 1px solid var(--line-cyan-50);
+  color: var(--color-text);
+  font-weight: 700;
+}
+
+.btn--line:hover {
+  background: rgba(62, 224, 255, 0.1);
+  color: var(--color-white);
+}
+
+.btn__icon {
+  color: var(--color-cyan);
+}
+
+/* Cards with the top-left box pattern (day / step / use cards) */
+.day-card,
+.step-card,
+.use-card {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.day-card::before,
+.step-card::after,
+.use-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 200px;
+  height: 84px;
+  background: url('../images/pattern.webp') top left / 200px auto no-repeat;
+  pointer-events: none;
+}
+
+/* ============================================================
+   HERO / KV (01, id="top")
+   ============================================================ */
+/* The whole hero (KV + title block) fits within one screen at any resolution,
+   (full screen height, capped at 1080px on very tall screens).
+   Content sizes use min(vw, vh) so short laptop screens shrink it too. */
+.hero {
+  position: relative;
+  /* screen height minus the sticky share header */
+  height: clamp(600px, calc(100vh - var(--header-h)), 1080px);
+  height: clamp(600px, calc(100svh - var(--header-h)), 1080px);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+}
+
+/* Dark blue backdrop the key art fades into on wide screens */
+.hero__kv {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: radial-gradient(ellipse 70% 80% at 50% 30%, #12365a 0%, #0a1d33 45%, var(--color-bg) 85%);
+}
+
+/* Key art is sized by the hero height (16:9), so on wide screens it is narrower than
+   the viewport; its left/right edges fade into the backdrop instead of hard-cutting.
+   Lifted 14% so the characters sit above the title block instead of behind it.
+   .hero__art is an empty frame with the exact same box, so overlays (beacon, glitch
+   copies) can be placed in image percentages and move with the art. */
+.hero__bg,
+.hero__art {
+  position: absolute;
+  top: -14%;
+  left: 50%;
+  height: 100%;
+  width: auto;
+  max-width: none;
+  aspect-ratio: 16 / 9;
+  transform: translateX(-50%);
+  object-fit: cover;
+  object-position: center 30%;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
+}
+
+.hero__kv::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(5, 12, 23, 0.35) 0%, rgba(5, 12, 23, 0) 22%, rgba(5, 12, 23, 0) 38%, rgba(5, 12, 23, 0.75) 66%, var(--color-bg) 100%);
+}
+
+/* Portrait screens: the title block takes more of the height, so darken from higher up */
+@media (max-aspect-ratio: 1 / 1) {
+  .hero__kv::after {
+    background: linear-gradient(180deg, rgba(5, 12, 23, 0.35) 0%, rgba(5, 12, 23, 0) 16%, rgba(5, 12, 23, 0.55) 34%, rgba(5, 12, 23, 0.85) 52%, var(--color-bg) 100%);
+  }
+}
+
+.hero__pica {
+  position: absolute;
+  z-index: 1;
+  top: clamp(16px, 2.4vw, 32px);
+  /* Align to the 1080px content column (20px gutter on narrow screens) */
+  right: max(20px, calc((100% - 1080px) / 2));
+  width: clamp(56px, 5.5vw, 84px);
+  height: auto;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.45));
+}
+
+.hero__content {
+  position: relative;
+  z-index: 2;
+  padding: 0 20px clamp(28px, 5vh, 56px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Game logo sits top-left (mirroring the PICA logo top-right) so the title + key copy own the centre.
+   The countdown panel is placed just under it (see .hero__timer). */
+.hero__logo {
+  position: absolute;
+  z-index: 2;
+  top: clamp(16px, 2.4vw, 32px);
+  left: max(20px, calc((100% - 1080px) / 2));
+  width: var(--hero-logo-w);
+  height: auto;
+  filter: drop-shadow(0 0 18px rgba(62, 224, 255, 0.35));
+}
+
+/* 로고 뒤 딤드: 밝은 하늘 배경 위에서도 로고가 잘 보이게 어둡게 깔아 줌 */
+.hero__logo-dim {
+  position: absolute;
+  z-index: 1;
+  top: calc(clamp(16px, 2.4vw, 32px) + var(--hero-logo-w) * 0.168 - var(--hero-logo-w) * 0.4);
+  left: calc(max(20px, (100% - 1080px) / 2) + var(--hero-logo-w) * 0.5 - var(--hero-logo-w) * 0.8);
+  width: calc(var(--hero-logo-w) * 1.6);
+  height: calc(var(--hero-logo-w) * 0.8);
+  /* 딤 컬러 #004F80 */
+  background: radial-gradient(closest-side, rgba(0, 79, 128, 0.9) 0%, rgba(0, 79, 128, 0.72) 45%, rgba(0, 79, 128, 0) 100%);
+  pointer-events: none;
+}
+
+.hero__title {
+  margin: clamp(10px, 2.2vh, 24px) 0 0;
+  font-family: var(--font-display);
+  /* 참고 이미지 기준: 윗줄 시안 "스팀 플레이테스트 #2" + 아랫줄 흰색 키카피, 같은 크기 */
+  font-size: clamp(30px, min(4.2vw, 6.4vh), 64px);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.6);
+}
+
+.hero__title-lead,
+.hero__title-accent {
+  display: block;
+}
+
+.hero__title-lead {
+  line-height: 1.2;
+}
+
+/* 모바일 전용 줄바꿈 (쉼표 뒤에서 끊기) */
+.br-mo { display: none; }
+@media (max-width: 480px) {
+  .br-mo { display: inline; }
+}
+
+.hero__title-accent {
+  margin-bottom: 0.06em;
+  color: var(--color-cyan);
+  text-shadow: 0 0 28px rgba(62, 224, 255, 0.45);
+}
+
+.hero__desc {
+  margin: clamp(8px, 1.6vh, 18px) 0 0;
+  max-width: 760px;
+  font-size: clamp(15px, 1.6vw, 18px);
+  line-height: 1.65;
+  color: var(--color-text-sub);
+  text-wrap: pretty;
+}
+
+/* 서브 텍스트 강조: 최대 10,000 마일리지 */
+.hero__desc-em {
+  color: var(--color-cyan);
+  font-weight: 700;
+  text-shadow: 0 0 12px rgba(62, 224, 255, 0.45);
+}
+
+.hero__actions {
+  margin-top: clamp(12px, 2.6vh, 28px);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Phones: stack the hero buttons full width so each keeps its HUD padding */
+@media (max-width: 480px) {
+  .hero__actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    width: 100%;
+    max-width: 320px;
+    margin-inline: auto;
+  }
+
+  .hero__actions .btn {
+    height: 52px;
+    font-size: 16px;
+  }
+
+  .hero__actions .btn--hud {
+    min-width: 0;
+    padding: 0 40px;
+  }
+}
+
+/* Bottom info bar — HUD strip across the bottom of the hero.
+   One centred highlight panel (blue fill, top brackets) holds both rows;
+   period and target share the same label / value styles, labels aligned in a column. */
+.hero__bar {
+  position: relative;
+  z-index: 2;
+  padding: 0;
+  border-top: 1px solid rgba(62, 224, 255, 0.22);
+  background: rgba(4, 10, 20, 0.55);
+  backdrop-filter: blur(4px);
+}
+
+.hero__bar-panel {
+  position: relative;
+  margin: 0;
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: center;
+  align-items: center;
+  column-gap: 16px;
+  row-gap: 4px;
+  padding: clamp(10px, 1.6vh, 16px) clamp(28px, 5vw, 56px);
+  color: rgba(230, 242, 251, 0.85);
+  background: linear-gradient(180deg, rgba(45, 140, 240, 0.16), rgba(20, 80, 170, 0.06));
+  box-shadow: inset 0 1px 0 rgba(63, 162, 255, 0.55);
+}
+
+/* Each row joins the panel grid so labels and values line up */
+.hero__bar-item {
+  display: contents;
+}
+
+.hero__bar-item dt {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-cyan);
+}
+
+.hero__bar-item dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(14px, 1.15vw, 16px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Top brackets: short line + slanted drop at each end, sitting just above the panel */
+.hero__bar-panel::before,
+.hero__bar-panel::after {
+  content: '';
+  position: absolute;
+  top: -12px;
+  width: 26px;
+  height: 11px;
+  border-top: 1px solid rgba(110, 195, 255, 0.35);
+}
+
+.hero__bar-panel::before {
+  left: max(8%, calc(50% - 240px));
+  border-left: 1px solid rgba(110, 195, 255, 0.35);
+  transform: skewX(-45deg);
+}
+
+.hero__bar-panel::after {
+  right: max(8%, calc(50% - 240px));
+  border-right: 1px solid rgba(110, 195, 255, 0.35);
+  transform: skewX(45deg);
+}
+
+@media (max-width: 640px) {
+  .hero__bar-panel {
+    column-gap: 10px;
+    padding-inline: 24px;
+    white-space: nowrap;
+  }
+
+  .hero__bar-item dd {
+    font-size: 15px;
+  }
+}
+
+
+/* ============================================================
+   REWARD (02, id="reward")
+   ============================================================ */
+.reward {
+  position: relative;
+  padding: var(--space-section) 20px;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(30, 120, 200, 0.22), transparent 70%),
+    repeating-linear-gradient(0deg, rgba(62, 224, 255, 0.035) 0 1px, transparent 1px 48px),
+    repeating-linear-gradient(90deg, rgba(62, 224, 255, 0.035) 0 1px, transparent 1px 48px);
+}
+
+/* HUD panel (panel.svg + pattern2.svg rebuilt in CSS so it scales without distortion)
+   .reward__box   — glow + accent bars (top/bottom notch bars, left/right side bars)
+   .reward__frame — 2px border ring with bright corner brackets
+   .reward__panel — fill, inner glow, inner line (::before), dot pattern (::after) */
+.reward__box {
+  --panel-blue: #3f86fa;
+  --panel-bracket: #34a7ff;
+  --panel-bar: #3ed5ff;
+  --panel-clip: polygon(
+    18px 0, calc(50% - 125px) 0, calc(50% - 115px) 10px, calc(50% - 59px) 10px, calc(50% - 51px) 20px,
+    calc(50% + 51px) 20px, calc(50% + 59px) 10px, calc(50% + 115px) 10px, calc(50% + 125px) 0,
+    calc(100% - 18px) 0, 100% 18px, 100% calc(100% - 18px), calc(100% - 18px) 100%,
+    calc(50% + 125px) 100%, calc(50% + 115px) calc(100% - 10px), calc(50% + 59px) calc(100% - 10px), calc(50% + 51px) calc(100% - 20px),
+    calc(50% - 51px) calc(100% - 20px), calc(50% - 59px) calc(100% - 10px), calc(50% - 115px) calc(100% - 10px), calc(50% - 125px) 100%,
+    18px 100%, 0 calc(100% - 18px), 0 18px
+  );
+  position: relative;
+  margin-top: var(--space-6);
+  filter: drop-shadow(0 0 6px rgba(63, 134, 250, 0.35));
+}
+
+.reward__box::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(var(--panel-bar) 0 0) 50% 11px / 100px 4px no-repeat,
+    linear-gradient(var(--panel-bar) 0 0) 50% calc(100% - 11px) / 100px 4px no-repeat,
+    linear-gradient(var(--panel-bar) 0 0) 0 50% / 6px 70px no-repeat,
+    linear-gradient(var(--panel-bar) 0 0) 100% 50% / 6px 70px no-repeat;
+}
+
+.reward__frame,
+.reward__panel {
+  clip-path: var(--panel-clip);
+}
+
+.reward__frame {
+  padding: 2px;
+  background:
+    linear-gradient(var(--panel-bracket) 0 0) top left / 30px 30px no-repeat,
+    linear-gradient(var(--panel-bracket) 0 0) top right / 30px 30px no-repeat,
+    linear-gradient(var(--panel-bracket) 0 0) bottom left / 30px 30px no-repeat,
+    linear-gradient(var(--panel-bracket) 0 0) bottom right / 30px 30px no-repeat,
+    rgba(63, 134, 250, 0.45);
+}
+
+.reward__panel {
+  position: relative;
+  isolation: isolate;
+  padding: clamp(40px, 5vw, 64px) clamp(22px, 4vw, 56px);
+  background:
+    radial-gradient(ellipse 45% 40% at 50% 50%, rgba(7, 14, 28, 0.6), transparent),
+    rgba(16, 26, 45, 0.95);
+  box-shadow: inset 0 0 26px rgba(0, 120, 255, 0.45);
+}
+
+/* Inner hairline with chamfered corners */
+.reward__panel::before {
+  --line: rgba(63, 134, 250, 0.4);
+  --diag: transparent calc(50% - 1px), var(--line) calc(50% - 0.5px), var(--line) calc(50% + 0.5px), transparent calc(50% + 1px);
+  content: '';
+  position: absolute;
+  inset: 8px;
+  z-index: -1;
+  border: 1px solid var(--line);
+  background:
+    linear-gradient(to bottom right, var(--diag)) top left / 12px 12px no-repeat,
+    linear-gradient(to bottom left, var(--diag)) top right / 12px 12px no-repeat,
+    linear-gradient(to bottom left, var(--diag)) bottom left / 12px 12px no-repeat,
+    linear-gradient(to bottom right, var(--diag)) bottom right / 12px 12px no-repeat;
+  background-origin: border-box;
+  clip-path: polygon(12px 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 0 calc(100% - 12px), 0 12px);
+  pointer-events: none;
+}
+
+/* Dot-grid pattern fading in toward the bottom (pattern2.svg) */
+.reward__panel::after {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  z-index: -1;
+  background: radial-gradient(var(--panel-blue) 0.75px, transparent 0.9px) 0 0 / 7px 7px;
+  opacity: 0.14;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 6%, #000 73%, rgba(0, 0, 0, 0.2));
+  mask-image: linear-gradient(to bottom, transparent 6%, #000 73%, rgba(0, 0, 0, 0.2));
+  pointer-events: none;
+}
+
+.reward__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 20px;
+}
+
+.day-card {
+  padding: 28px 28px 30px;
+  background: rgba(62, 224, 255, 0.04);
+  border: 1px solid rgba(62, 224, 255, 0.22);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.day-card__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.day-card__badge {
+  font-family: var(--font-tech);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  color: var(--color-ink);
+  background: var(--color-cyan);
+  padding: 5px 12px;
+}
+
+.day-card__cond {
+  margin: 0;
+  font-size: 15px;
+  color: var(--color-text-sub);
+}
+
+.day-card__cond b {
+  color: var(--color-text);
+}
+
+.day-card__amount {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-1);
+  font-family: var(--font-tech);
+  font-weight: 700;
+}
+
+.day-card__num {
+  font-size: clamp(52px, 7vw, 72px);
+  line-height: 1;
+  color: var(--color-white);
+  text-shadow: 0 0 30px var(--glow-cyan);
+}
+
+.day-card__unit {
+  font-size: 28px;
+  color: var(--color-cyan);
+}
+
+.reward__total {
+  margin-top: 20px;
+  padding: 22px 28px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 24px;
+  background: linear-gradient(90deg, rgba(62, 224, 255, 0.18), rgba(62, 224, 255, 0.04));
+  border: 1px solid rgba(62, 224, 255, 0.4);
+}
+
+.reward__total-label {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.reward__total-amount {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.reward__total-num {
+  font-family: var(--font-tech);
+  font-weight: 700;
+  font-size: clamp(34px, 4.5vw, 44px);
+  line-height: 1;
+  color: var(--color-point);
+  text-shadow: 0 0 20px var(--glow-point);
+}
+
+.reward__total-unit {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.reward__notes {
+  margin: 28px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--color-muted);
+}
+
+/* ============================================================
+   HOW TO (03, id="howto")
+   ============================================================ */
+.howto {
+  padding: var(--space-section) 20px;
+  background: var(--color-bg-alt);
+  border-top: 1px solid var(--line-cyan-08);
+}
+
+.howto__grid {
+  margin-top: var(--space-6);
+  display: grid;
+  /* 4 steps: one row on desktop, 2×2 on tablets, stacked on phones */
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  /* Card drop shadow lives here: a filter on the clipped card itself would be clipped away */
+  filter: drop-shadow(0 0 6px rgba(0, 8, 43, 0.5));
+}
+
+/* Card shape from card.svg / card_line.svg:
+   flat top, 25px chamfer bottom-right, 8px step on the bottom edge.
+   .step-card is the translucent fill, ::before is the 1px line drawn as an evenodd ring
+   (same technique as .use-card) so the fill can stay see-through. */
+.step-card {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 8px;
+  clip-path: polygon(
+    0 0, 100% 0, 100% calc(100% - 25px), calc(100% - 25px) 100%,
+    48% 100%, calc(48% - 8px) calc(100% - 8px), 0 calc(100% - 8px)
+  );
+  background: rgba(57, 103, 179, 0.4);
+}
+
+.step-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  clip-path: polygon(evenodd,
+    0 0, 100% 0, 100% calc(100% - 25px), calc(100% - 25px) 100%,
+    48% 100%, calc(48% - 8px) calc(100% - 8px), 0 calc(100% - 8px), 0 0,
+    1px 1px, 1px calc(100% - 9px), calc(48% - 8.4px) calc(100% - 9px),
+    calc(48% - 0.4px) calc(100% - 1px), calc(100% - 25.4px) calc(100% - 1px),
+    calc(100% - 1px) calc(100% - 25.4px), calc(100% - 1px) 1px, 1px 1px
+  );
+  background:
+    linear-gradient(150deg, transparent 68%, rgba(63, 134, 250, 0.9)),
+    rgba(63, 134, 250, 0.5);
+  pointer-events: none;
+}
+
+.step-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.step-card__num {
+  font-family: var(--font-tech);
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--color-ink);
+  background: var(--color-cyan);
+  padding: 6px 18px 6px 16px;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 12px) 100%, 0 100%);
+}
+
+.step-card__label {
+  padding-right: var(--space-2);
+  font-family: var(--font-tech);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--color-muted);
+}
+
+/* Screenshot slot (16:10, image fills and crops) */
+.step-card__shot {
+  margin: var(--space-2) var(--space-2) 0;
+  aspect-ratio: 16 / 10;
+  border: 1px solid var(--line-cyan-25);
+  background: rgba(4, 12, 26, 0.55);
+  overflow: hidden;
+}
+
+.step-card__shot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Small UI capture (login widget): show it whole instead of cropping */
+.step-card__shot--contain {
+  padding: 12px;
+}
+
+.step-card__shot--contain img {
+  object-fit: contain;
+}
+
+/* Placeholder until the step image arrives (⚠️ steps 02/03 in index.html) */
+.step-card__shot--empty {
+  background:
+    radial-gradient(rgba(140, 180, 230, 0.18) 0.8px, transparent 1px) 0 0 / 6px 6px,
+    rgba(4, 12, 26, 0.55);
+}
+
+.step-card__desc a {
+  color: var(--color-cyan);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 1023px) {
+  .howto__grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 640px) {
+  .howto__grid { grid-template-columns: 1fr; }
+}
+
+.step-card__body {
+  padding: 20px 20px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.step-card__title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.step-card__desc {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-caption);
+}
+
+/* ============================================================
+   MILEAGE (04, id="mileage")
+   ============================================================ */
+.mileage {
+  position: relative;
+  isolation: isolate;
+  padding: var(--space-section) 20px;
+  background:
+    radial-gradient(ellipse 60% 60% at 50% 100%, rgba(30, 120, 200, 0.16), transparent 70%),
+    var(--color-bg);
+}
+
+/* Monitor-style scanlines behind the cards, fading out toward the edges */
+.mileage::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    repeating-linear-gradient(to bottom, rgba(80, 150, 255, 0.08) 0 3px, transparent 3px 8px),
+    radial-gradient(ellipse 60% 55% at 50% 50%, rgba(30, 90, 220, 0.35), transparent 75%);
+  mask-image: radial-gradient(ellipse 80% 75% at 50% 50%, #000 40%, transparent 90%);
+  pointer-events: none;
+}
+
+.mileage__grid {
+  margin-top: var(--space-6);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr));
+  gap: 20px;
+  /* Card drop shadow lives here: a filter on the clipped card itself would be clipped away */
+  filter: drop-shadow(0 0 6px rgba(0, 8, 43, 0.5));
+}
+
+/* Card shape from bigcard.svg / card_line.svg — same as .step-card, step at 74%.
+   .use-card is the translucent fill, ::after is the 1px line (::before is the shared pattern).
+   The line is a ring cut with an evenodd polygon (outer shape + 1px-inset shape),
+   so the fill can stay see-through without the line colour bleeding under it. */
+.use-card {
+  padding: var(--space-4) var(--space-4) calc(var(--space-4) + 8px);
+  clip-path: polygon(
+    0 0, 100% 0, 100% calc(100% - 25px), calc(100% - 25px) 100%,
+    74% 100%, calc(74% - 8px) calc(100% - 8px), 0 calc(100% - 8px)
+  );
+  background: rgba(35, 79, 146, 0.6);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.use-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  clip-path: polygon(evenodd,
+    0 0, 100% 0, 100% calc(100% - 25px), calc(100% - 25px) 100%,
+    74% 100%, calc(74% - 8px) calc(100% - 8px), 0 calc(100% - 8px), 0 0,
+    1px 1px, 1px calc(100% - 9px), calc(74% - 8.4px) calc(100% - 9px),
+    calc(74% - 0.4px) calc(100% - 1px), calc(100% - 25.4px) calc(100% - 1px),
+    calc(100% - 1px) calc(100% - 25.4px), calc(100% - 1px) 1px, 1px 1px
+  );
+  background:
+    linear-gradient(150deg, transparent 68%, rgba(63, 134, 250, 0.9)),
+    rgba(63, 134, 250, 0.5);
+  pointer-events: none;
+}
+
+.use-card__tag {
+  font-family: var(--font-tech);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--color-cyan);
+  border: 1px solid var(--line-cyan-50);
+  padding: 3px 10px;
+}
+
+.use-card__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.use-card__desc {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-caption);
+}
+
+/* Screenshot area — fixed height so both cards line up whatever the image ratio */
+.use-card__visual {
+  align-self: stretch;
+  margin-top: auto;
+  padding: 16px;
+  height: clamp(200px, 24vw, 264px);
+  /* darker well so the screenshot reads apart from the text above */
+  background: rgba(4, 14, 34, 0.45);
+  border: 1px solid rgba(63, 134, 250, 0.18);
+}
+
+.use-card__visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* HUD button — btn.svg shape + btn_line.svg cyan edge.
+   The button itself is NOT clipped so the edge line can glow outside the shape;
+   each layer clips itself instead: ::after = faint 1px ring, ::before = fill,
+   .btn__edge = glowing cyan chevron (glow comes from a filter on the unclipped span). */
+.mileage__more {
+  margin-top: var(--space-6);
+  display: flex;
+  justify-content: center;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.btn--hud {
+  --hud-clip: polygon(32px 0, calc(100% - 10px) 0, 100% 23%, calc(100% - 32px) 100%, 10px 100%, 0 77%);
+  position: relative;
+  isolation: isolate;
+  justify-content: center;
+  min-width: 255px;
+  height: 62px;
+  padding: 0 48px;
+  color: var(--color-white);
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+.btn--hud::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: rgba(74, 143, 255, 0.2);
+  clip-path: var(--hud-clip);
+}
+
+.btn--hud::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  z-index: -1;
+  background: radial-gradient(ellipse 120% 220% at 15% -55%, rgba(55, 92, 151, 0.95) 15%, rgba(26, 50, 117, 0.85) 39%);
+  clip-path: var(--hud-clip);
+  transition: filter 0.2s;
+}
+
+.btn__edge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 37px;
+  height: 100%;
+  pointer-events: none;
+  filter:
+    drop-shadow(0 0 3px rgba(120, 240, 255, 0.95))
+    drop-shadow(0 0 10px rgba(62, 213, 255, 0.7));
+}
+
+.btn__edge::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #c8fbff, #3ed5ff 60%, #29b6ff);
+  clip-path: polygon(100% 0, 4.6px 77%, 15px 100%, 10.3px 100%, 0 77%, 32.2px 0);
+}
+
+.btn--hud:hover {
+  color: var(--color-white);
+}
+
+.btn--hud:hover::before {
+  filter: brightness(1.25);
+}
+
+/* ============================================================
+   NOTICE (05, id="notice")
+   ============================================================ */
+.notice {
+  padding: 80px 20px var(--space-section);
+  background: var(--color-bg-alt);
+  border-top: 1px solid var(--line-cyan-08);
+}
+
+.notice__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--line-cyan-25);
+  cursor: pointer;
+  list-style: none;
+}
+
+.notice__summary::-webkit-details-marker {
+  display: none;
+}
+
+.notice__head {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.notice__title {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 3vw, 28px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.notice__sub {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-muted);
+}
+
+.notice__icon::before {
+  content: '+';
+  font-family: var(--font-tech);
+  font-size: 28px;
+  line-height: 1;
+  color: var(--color-cyan);
+}
+
+.notice__box[open] .notice__icon::before {
+  content: '−';
+}
+
+.notice__list {
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--color-caption);
+}
+
+/* ============================================================
+   MOTION & INTERACTION (assets/js/script.js M1–M10)
+   Each block pairs with the same-numbered block in script.js.
+   All motion is skipped when the OS asks for reduced motion.
+   ============================================================ */
+
+/* M1. Count-up numbers — fixed-width digits so the number doesn't jitter while counting */
+[data-count] {
+  font-variant-numeric: tabular-nums;
+}
+
+/* M2. HUD boot-in reveal — cards flicker on like a screen powering up, staggered */
+.is-boot-ready:not(.is-booted) {
+  opacity: 0;
+}
+
+.is-boot-ready.is-booted {
+  animation: hud-boot 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: calc(var(--boot-i, 0) * 90ms);
+}
+
+@keyframes hud-boot {
+  0%   { opacity: 0; transform: translateY(24px) scaleY(0.96); }
+  20%  { opacity: 0.9; }
+  28%  { opacity: 0.15; }
+  38%  { opacity: 1; }
+  46%  { opacity: 0.4; }
+  60%  { opacity: 1; transform: translateY(0) scaleY(1); }
+  100% { opacity: 1; transform: none; }
+}
+
+/* M3. Title decode — JS only */
+
+/* M4. Scanline drift — the mileage scanlines slowly roll downward (period 8px) */
+.has-motion .mileage::before {
+  animation: scan-drift 2.4s linear infinite;
+}
+
+@keyframes scan-drift {
+  from { background-position: 0 0, 0 0; }
+  to   { background-position: 0 8px, 0 0; }
+}
+
+/* M5. Event countdown — HUD 7-segment clock in the KV top-left (mirrors the PICA logo).
+   Unlit segments stay faintly visible like a real LCD. Size scales with --seg-size. */
+.hero__timer {
+  --seg-size: clamp(24px, 2.4vw, 34px);
+  --seg-t: calc(var(--seg-size) * 0.11);
+  /* Fixed under the sticky header so it follows the page while scrolling
+     (starts in the same spot as before: top-left of the key art) */
+  position: fixed;
+  z-index: 900;
+  /* starts just under the top-left game logo; moves up once past the hero (.is-docked) */
+  top: calc(var(--header-h) + clamp(16px, 2.4vw, 32px) + var(--hero-logo-w) * 0.336 + 14px);
+  transition: top 0.3s ease;
+  left: max(20px, calc((100% - 1080px) / 2));
+  padding: 8px 12px 11px;
+  backdrop-filter: blur(3px);
+  background:
+    radial-gradient(rgba(140, 180, 230, 0.22) 0.8px, transparent 1px) 0 0 / 6px 6px,
+    linear-gradient(180deg, rgba(10, 22, 40, 0.5), rgba(4, 10, 20, 0.6));
+  border: 1px solid rgba(62, 224, 255, 0.18);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%);
+}
+
+.hero__timer[hidden] {
+  display: none;
+}
+
+.hero__timer.is-docked {
+  top: calc(var(--header-h) + 16px);
+}
+
+/* Phones: past the hero the panel docks bottom-left (level with the share/TOP buttons)
+   so it doesn't sit on top of section titles */
+@media (max-width: 768px) {
+  .hero__timer.is-docked {
+    top: auto;
+    bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+    left: 16px;
+    scale: 0.85;
+    transform-origin: 0 100%;
+  }
+}
+
+.hero__timer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.hero__timer-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--color-text-sub);
+}
+
+.hero__timer-tab {
+  margin-right: -12px;
+  padding: 2px 10px 2px 14px;
+  font-family: var(--font-tech);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--color-white);
+  background: linear-gradient(90deg, #1f8fe0, #3ec8ff);
+  clip-path: polygon(10px 0, 100% 0, 100% 100%, 0 100%);
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+}
+
+.hero__timer-clock {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--seg-size) * 0.12);
+}
+
+.seg-digit {
+  position: relative;
+  width: calc(var(--seg-size) * 0.56);
+  height: var(--seg-size);
+}
+
+.seg {
+  position: absolute;
+  background: rgba(200, 220, 245, 0.08);
+  transition: background 120ms;
+}
+
+.seg.is-on {
+  background: var(--color-white);
+  box-shadow: 0 0 10px rgba(180, 230, 255, 0.55);
+}
+
+/* horizontal: a top, g middle, d bottom */
+.seg--a, .seg--g, .seg--d {
+  left: calc(var(--seg-t) * 0.6);
+  right: calc(var(--seg-t) * 0.6);
+  height: var(--seg-t);
+  clip-path: polygon(0 50%, var(--seg-t) 0, calc(100% - var(--seg-t)) 0, 100% 50%, calc(100% - var(--seg-t)) 100%, var(--seg-t) 100%);
+}
+
+.seg--a { top: 0; }
+.seg--g { top: calc(50% - var(--seg-t) / 2); }
+.seg--d { bottom: 0; }
+
+/* vertical: f/b upper, e/c lower */
+.seg--b, .seg--c, .seg--e, .seg--f {
+  width: var(--seg-t);
+  height: calc(50% - var(--seg-t) * 0.7);
+  clip-path: polygon(50% 0, 100% var(--seg-t), 100% calc(100% - var(--seg-t)), 50% 100%, 0 calc(100% - var(--seg-t)), 0 var(--seg-t));
+}
+
+.seg--f, .seg--b { top: calc(var(--seg-t) * 0.6); }
+.seg--e, .seg--c { bottom: calc(var(--seg-t) * 0.6); }
+.seg--f, .seg--e { left: 0; }
+.seg--b, .seg--c { right: 0; }
+
+.seg-colon {
+  position: relative;
+  width: var(--seg-t);
+  height: var(--seg-size);
+}
+
+.seg-colon::before,
+.seg-colon::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: var(--seg-t);
+  height: var(--seg-t);
+  background: var(--color-white);
+  box-shadow: 0 0 8px rgba(180, 230, 255, 0.55);
+}
+
+.seg-colon::before { top: 28%; }
+.seg-colon::after  { bottom: 28%; }
+
+.has-motion .seg-colon {
+  animation: colon-blink 1s steps(1) infinite;
+}
+
+@keyframes colon-blink {
+  50% { opacity: 0.2; }
+}
+
+.hero__timer.is-ended .seg.is-on {
+  background: rgba(200, 220, 245, 0.35);
+  box-shadow: none;
+}
+
+/* M6. Hover scan / button sheen */
+.fx-scan {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent 0%, rgba(62, 224, 255, 0.14) 45%, rgba(62, 224, 255, 0.32) 50%, transparent 52%);
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+.day-card:hover .fx-scan,
+.step-card:hover .fx-scan,
+.use-card:hover .fx-scan {
+  animation: card-scan 0.9s ease-out;
+}
+
+@keyframes card-scan {
+  0%   { transform: translateY(-100%); opacity: 1; }
+  100% { transform: translateY(100%); opacity: 1; }
+}
+
+.btn--primary {
+  position: relative;
+  overflow: hidden;
+}
+
+.fx-sheen {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -60%;
+  width: 40%;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  transform: skewX(-20deg);
+  animation: btn-sheen 4s ease-in-out infinite;
+}
+
+/* HUD buttons aren't clipped themselves, so their sheen clips to the button shape
+   and moves via background-position instead of sliding the element */
+.btn--hud .fx-sheen {
+  inset: 0;
+  left: 0;
+  width: auto;
+  z-index: -1;
+  transform: none;
+  clip-path: var(--hud-clip);
+  background: linear-gradient(105deg, transparent 40%, rgba(140, 240, 255, 0.35) 50%, transparent 60%) 0 0 / 300% 100% no-repeat;
+  animation: hud-sheen 4s ease-in-out infinite;
+}
+
+@keyframes hud-sheen {
+  0%, 70% { background-position: 100% 0; }
+  100%    { background-position: 0 0; }
+}
+
+/* HUD edge line flashes: two quick bright pulses, then a soft breathe */
+.has-motion .btn__edge {
+  animation: edge-flash 2.6s ease-in-out infinite;
+}
+
+@keyframes edge-flash {
+  0%, 100% { opacity: 0.75; filter: drop-shadow(0 0 3px rgba(120, 240, 255, 0.8)) drop-shadow(0 0 8px rgba(62, 213, 255, 0.5)); }
+  8%       { opacity: 1;    filter: drop-shadow(0 0 4px #e6fdff) drop-shadow(0 0 16px rgba(62, 213, 255, 1)); }
+  13%      { opacity: 0.45; }
+  18%      { opacity: 1;    filter: drop-shadow(0 0 4px #e6fdff) drop-shadow(0 0 18px rgba(62, 213, 255, 1)); }
+  45%      { opacity: 0.85; filter: drop-shadow(0 0 3px rgba(120, 240, 255, 0.9)) drop-shadow(0 0 10px rgba(62, 213, 255, 0.7)); }
+}
+
+@keyframes btn-sheen {
+  0%, 70% { left: -60%; }
+  100%    { left: 130%; }
+}
+
+/* M7. Key art: intro (zooms in from 112% and brightens on load) + slow Ken Burns breathe.
+   Intro animates transform (keeps the -50% centring), Ken Burns animates the separate
+   `scale` property, so the two don't fight. */
+.has-motion .hero__bg,
+.has-motion .hero__art {
+  transform-origin: 50% 45%;
+  animation:
+    kv-intro 1.2s cubic-bezier(0.2, 0.7, 0.2, 1) both,
+    kv-breathe 22s ease-in-out 1.2s infinite alternate;
+}
+
+.has-motion .hero__bg {
+  animation:
+    kv-intro 1.2s cubic-bezier(0.2, 0.7, 0.2, 1) both,
+    kv-intro-light 0.8s ease-out both,
+    kv-breathe 22s ease-in-out 1.2s infinite alternate;
+}
+
+@keyframes kv-intro {
+  from { transform: translateX(-50%) scale(1.12); }
+  to   { transform: translateX(-50%) scale(1); }
+}
+
+@keyframes kv-intro-light {
+  from { filter: brightness(0.7) saturate(0.85); }
+  to   { filter: none; }
+}
+
+@keyframes kv-breathe {
+  from { scale: 1; }
+  to   { scale: 1.07; }
+}
+
+/* M9. Glitch — script.js adds .is-glitch to .hero__kv for ~0.3s, first right after the intro, then every 2.5–4s.
+   Two tinted copies of the key art (inside .hero__art) jump sideways in slices. */
+.hero__glitch {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.hero__glitch--r { filter: sepia(1) saturate(8) hue-rotate(-50deg) brightness(0.8); }
+.hero__glitch--b { filter: sepia(1) saturate(8) hue-rotate(150deg) brightness(0.8); }
+
+.hero__kv.is-glitch .hero__glitch--r { animation: glitch-r 0.3s steps(1) both; }
+.hero__kv.is-glitch .hero__glitch--b { animation: glitch-b 0.3s steps(1) both; }
+
+@keyframes glitch-r {
+  0%   { opacity: 0.7; translate: -10px 0; clip-path: inset(12% 0 64% 0); }
+  25%  { opacity: 0.7; translate: 14px 0;  clip-path: inset(48% 0 30% 0); }
+  50%  { opacity: 0.6; translate: -6px 0;  clip-path: inset(70% 0 8% 0); }
+  75%  { opacity: 0.7; translate: 8px 0;   clip-path: inset(26% 0 52% 0); }
+  100% { opacity: 0; }
+}
+
+@keyframes glitch-b {
+  0%   { opacity: 0.7; translate: 10px 0;  clip-path: inset(30% 0 46% 0); }
+  25%  { opacity: 0.6; translate: -12px 0; clip-path: inset(6% 0 78% 0); }
+  50%  { opacity: 0.7; translate: 6px 0;   clip-path: inset(56% 0 20% 0); }
+  75%  { opacity: 0.6; translate: -8px 0;  clip-path: inset(80% 0 4% 0); }
+  100% { opacity: 0; }
+}
+
+/* M9b. Title glitch — own timing, separate from the key art.
+   script.js lays thin copies of the title (.hero__title-ghost) over it and, for a few
+   frames per burst, shows random narrow slices of them shifted sideways in red / cyan / white. */
+.hero__title {
+  position: relative;
+}
+
+.hero__title-ghost {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  mix-blend-mode: screen;
+}
+
+.hero__title-ghost .hero__title-lead,
+.hero__title-ghost .hero__title-accent {
+  color: inherit;
+  text-shadow: none;
+}
+
+.hero__title-ghost--r { color: rgba(255, 46, 99, 0.9); }
+.hero__title-ghost--c { color: rgba(64, 232, 255, 0.95); }
+.hero__title-ghost--w { color: rgba(235, 252, 255, 0.95); }
+
+.hero__title.is-jitter {
+  translate: var(--jx, 0) 0;
+}
+
+/* Title rise-in — each line floats up slowly, the accent line a beat after the lead.
+   The glitch copies carry the same spans, so they rise in step with the real title. */
+.has-motion .hero__title-lead,
+.has-motion .hero__title-accent {
+  animation: title-rise 1.2s cubic-bezier(0.22, 0.8, 0.24, 1) both;
+}
+
+.has-motion .hero__title-accent { animation-delay: 0.15s; }
+.has-motion .hero__title-lead   { animation-delay: 0.5s; }
+
+@keyframes title-rise {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+/* M10. Tower beacon — on the tower's disc (49.9% / 20% of the key art) */
+.hero__beacon {
+  position: absolute;
+  left: 49.9%;
+  top: 20%;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 50%;
+  background: #eafcff;
+  box-shadow: 0 0 6px 2px rgba(120, 235, 255, 0.9), 0 0 18px 6px rgba(62, 200, 255, 0.5);
+  opacity: 0;
+}
+
+.hero__beacon::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 120px;
+  height: 120px;
+  margin: -60px 0 0 -60px;
+  border-radius: 50%;
+  border: 1px solid rgba(120, 235, 255, 0.7);
+  box-shadow: 0 0 12px rgba(62, 200, 255, 0.5), inset 0 0 12px rgba(62, 200, 255, 0.35);
+  transform: scale(0);
+  opacity: 0;
+}
+
+.has-motion .hero__beacon {
+  animation: beacon-blink 2.4s ease-in-out infinite;
+}
+
+.has-motion .hero__beacon::after {
+  animation: beacon-ring 2.4s ease-out infinite;
+}
+
+@keyframes beacon-blink {
+  0%, 100% { opacity: 0.25; }
+  10%      { opacity: 1; }
+  40%      { opacity: 0.6; }
+}
+
+@keyframes beacon-ring {
+  0%   { transform: scale(0.05); opacity: 0.9; }
+  70%  { opacity: 0.15; }
+  100% { transform: scale(1); opacity: 0; }
+}
+
+/* M11. Grid lightning — canvas drawn by script.js along the EVENT 01 background grid */
+.reward__bolts {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.reward > .container {
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================================================
+   SHARE HEADER KIT (헤더_공유하기_이식가이드 2단계, 원본 그대로)
+   ============================================================ */
+/* ════════════════════════════════════════
+   HEADER
+════════════════════════════════════════ */
+.cb-header {
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  height: var(--header-h);
+  background: linear-gradient(90deg, #000 0%, #060712 100%);
+  box-shadow: inset 0px -1px 0px rgba(255,255,255,0.13);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cb-header__inner {
+  max-width: 1440px;
+  width: 100%;
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+.cb-header__notice-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 0 1 auto;
+  min-width: 0;
+  justify-content: center;
+}
+.toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 112px;
+  height: 44px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  position: relative;
+}
+.toggle-btn__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.cb-header__notice {
+  font-size: clamp(12px, 1.1vw, 14px);
+  color: #fff;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.cb-header__notice u { text-decoration: underline; }
+.cb-header__notice b { font-weight: 700; }
+.cb-header__notice a { color: #469CFF; text-decoration: none; }
+.cb-header__notice a:hover u { opacity: 0.8; }
+
+.btn-share {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  background: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 6px 12px;
+  height: 32px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+.btn-share:hover { opacity: 0.85; }
+.btn-share img { width: 12px; height: auto; display: block; }
+.btn-share span {
+  font-size: 12px;
+  font-weight: 700;
+  color: #111;
+}
+
+.mobile-fab {
+  display: none;
+  position: fixed;
+  right: 16px;
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  z-index: 1800;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.mobile-fab__btn {
+  width: 48px;
+  height: 48px;
+  border: none;
+  border-radius: 50%;
+  background: #fff;
+  color: #111;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
+  cursor: pointer;
+  padding: 0;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.mobile-fab__btn img {
+  display: block;
+  width: 20px;
+  height: 20px;
+  filter: none;
+}
+.mobile-fab__btn--top {
+  font-family: -apple-system, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  background: #f0f0f2;
+  color: #111;
+}
+.mobile-fab__btn--top:hover {
+  background: #e4e4e8;
+}
+
+.copy-toast {
+  position: fixed;
+  left: 50%;
+  top: calc(var(--header-h) + 12px);
+  transform: translate(-50%, 12px);
+  background: #fff;
+  color: #111;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.4;
+  padding: 12px 20px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2000;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  white-space: nowrap;
+}
+.copy-toast.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.share-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2100;
+  padding: 20px;
+}
+.share-modal.is-open { display: flex; }
+.share-modal__dialog {
+  background: #fff;
+  border-radius: 20px;
+  padding: 32px 24px 28px;
+  width: 100%;
+  max-width: 420px;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+  animation: shareModalIn 0.18s ease-out;
+}
+@keyframes shareModalIn {
+  from { transform: translateY(12px); opacity: 0; }
+  to   { transform: translateY(0);     opacity: 1; }
+}
+.share-modal__title {
+  color: #111;
+  font-size: 20px;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 24px;
+  letter-spacing: -0.02em;
+}
+.share-modal__close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 26px;
+  color: #555;
+  line-height: 1;
+  border-radius: 50%;
+  transition: background 0.15s;
+}
+.share-modal__close:hover { background: #f0f0f0; }
+.share-modal__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.share-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 4px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: 12px;
+  transition: background 0.15s;
+  min-height: 44px;
+}
+.share-item:hover { background: #f5f5f7; }
+.share-item__icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+.share-item__icon svg { width: 28px; height: 28px; display: block; }
+.share-item--kakao     .share-item__icon { background: #FEE500; color: #181600; }
+.share-item--facebook  .share-item__icon { background: #1877F2; }
+.share-item--twitter   .share-item__icon { background: #000; }
+.share-item--naver     .share-item__icon { background: #03C75A; }
+.share-item--instagram .share-item__icon {
+  background: linear-gradient(135deg, #feda75 0%, #fa7e1e 25%, #d62976 50%, #962fbf 75%, #4f5bd5 100%);
+}
+.share-item--copy      .share-item__icon { background: #2c2c32; }
+.share-item__label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+@media (max-width: 480px) {
+  .share-modal__dialog { padding: 28px 18px 22px; }
+  .share-modal__grid { gap: 8px; }
+  .share-item__icon { width: 52px; height: 52px; }
+  .share-item__icon svg { width: 26px; height: 26px; }
+  .share-item__label { font-size: 12px; }
+}
+
+@media (max-width: 1024px) {
+  .cb-header {
+    height: auto;
+    min-height: var(--header-h);
+    padding: 8px 0;
+  }
+  .cb-header__inner {
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: min(16px, 2vw);
+    padding: 0 24px;
+  }
+  .cb-header__notice-wrap {
+    flex: 0 1 auto;
+    min-width: 0;
+  }
+  .cb-header__notice {
+    white-space: normal;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .cb-header {
+    height: auto;
+    min-height: 44px;
+    overflow: visible;
+    align-items: stretch;
+    padding: 8px 0;
+  }
+  .cb-header__inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 0 max(12px, env(safe-area-inset-left, 0px)) 0 max(12px, env(safe-area-inset-right, 0px));
+    min-width: 0;
+    box-sizing: border-box;
+  }
+  .cb-header__notice-wrap {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    justify-content: center;
+    gap: 0;
+    align-items: stretch;
+    flex: none;
+    overflow: visible;
+  }
+  .cb-header__notice {
+    text-align: center;
+    font-size: clamp(11px, 3.2vw, 14px);
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    margin: 0;
+    white-space: normal;
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+    overflow: visible;
+  }
+  .toggle-btn,
+  .btn-share {
+    display: none;
+  }
+  .mobile-fab {
+    display: flex;
+  }
+}
+
+/* ============================================================
+   SHARE KIT — TIME:TAKERS HUD skin
+   Overrides only (the kit block above stays as the original copy).
+   Dark dot-grid panels, thin cyan lines, chamfered corners, cyan icons.
+   Icons are recoloured with CSS masks; the mask is share_icon.svg inlined as a data URI,
+   because a mask loaded from a file is blocked when index.html is opened directly (file://).
+   ============================================================ */
+
+/* Header share button — small .btn--hud-plain (same shape/ring/fill, no edge line).
+   The button background is the faint ring, ::after the fill (::before is the icon). */
+.btn-share {
+  --hud-clip: polygon(14px 0, calc(100% - 5px) 0, 100% 23%, calc(100% - 14px) 100%, 5px 100%, 0 77%);
+  position: relative;
+  isolation: isolate;
+  gap: 6px;
+  height: 32px;
+  padding: 0 22px 0 20px;
+  border: 0;
+  border-radius: 0;
+  background: rgba(74, 143, 255, 0.2);
+  clip-path: var(--hud-clip);
+}
+
+.btn-share::after {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  z-index: -1;
+  background: radial-gradient(ellipse 120% 220% at 15% -55%, rgba(55, 92, 151, 0.95) 15%, rgba(26, 50, 117, 0.85) 39%);
+  clip-path: var(--hud-clip);
+  transition: filter 0.2s;
+}
+
+.btn-share:hover {
+  opacity: 1;
+}
+
+.btn-share:hover::after {
+  filter: brightness(1.25);
+}
+
+.btn-share img {
+  visibility: hidden;
+  width: 12px;
+}
+
+.btn-share::before,
+.mobile-fab__btn:not(.mobile-fab__btn--top)::before {
+  content: '';
+  position: absolute;
+  background: var(--color-cyan);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg width='17' height='19' viewBox='0 0 17 19' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M13.75 18.3333C12.9861 18.3333 12.3368 18.066 11.8021 17.5312C11.2674 16.9965 11 16.3472 11 15.5833C11 15.4917 11.0229 15.2778 11.0688 14.9417L4.62917 11.1833C4.38472 11.4125 4.10208 11.5922 3.78125 11.7223C3.46042 11.8525 3.11667 11.9173 2.75 11.9167C1.98611 11.9167 1.33681 11.6493 0.802083 11.1146C0.267361 10.5799 0 9.93056 0 9.16667C0 8.40278 0.267361 7.75347 0.802083 7.21875C1.33681 6.68403 1.98611 6.41667 2.75 6.41667C3.11667 6.41667 3.46042 6.48175 3.78125 6.61192C4.10208 6.74208 4.38472 6.92144 4.62917 7.15L11.0688 3.39167C11.0382 3.28472 11.0192 3.18175 11.0119 3.08275C11.0046 2.98375 11.0006 2.87283 11 2.75C11 1.98611 11.2674 1.33681 11.8021 0.802083C12.3368 0.267361 12.9861 0 13.75 0C14.5139 0 15.1632 0.267361 15.6979 0.802083C16.2326 1.33681 16.5 1.98611 16.5 2.75C16.5 3.51389 16.2326 4.16319 15.6979 4.69792C15.1632 5.23264 14.5139 5.5 13.75 5.5C13.3833 5.5 13.0396 5.43492 12.7188 5.30475C12.3979 5.17458 12.1153 4.99522 11.8708 4.76667L5.43125 8.525C5.46181 8.63194 5.48106 8.73522 5.489 8.83483C5.49694 8.93444 5.50061 9.04506 5.5 9.16667C5.49939 9.28828 5.49572 9.39919 5.489 9.49942C5.48228 9.59964 5.46303 9.70261 5.43125 9.80833L11.8708 13.5667C12.1153 13.3375 12.3979 13.1581 12.7188 13.0286C13.0396 12.899 13.3833 12.8339 13.75 12.8333C14.5139 12.8333 15.1632 13.1007 15.6979 13.6354C16.2326 14.1701 16.5 14.8194 16.5 15.5833C16.5 16.3472 16.2326 16.9965 15.6979 17.5312C15.1632 18.066 14.5139 18.3333 13.75 18.3333ZM13.75 16.5C14.0097 16.5 14.2276 16.4123 14.4036 16.2369C14.5796 16.0615 14.6673 15.8437 14.6667 15.5833C14.6661 15.323 14.5781 15.1054 14.4027 14.9307C14.2273 14.7559 14.0097 14.6679 13.75 14.6667C13.4903 14.6654 13.2727 14.7534 13.0973 14.9307C12.9219 15.1079 12.8339 15.3254 12.8333 15.5833C12.8327 15.8412 12.9207 16.0591 13.0973 16.2369C13.2739 16.4147 13.4915 16.5024 13.75 16.5ZM2.75 10.0833C3.00972 10.0833 3.22758 9.99533 3.40358 9.81933C3.57958 9.64333 3.66728 9.42578 3.66667 9.16667C3.66606 8.90756 3.57806 8.69 3.40267 8.514C3.22728 8.338 3.00972 8.25 2.75 8.25C2.49028 8.25 2.27272 8.338 2.09733 8.514C1.92194 8.69 1.83394 8.90756 1.83333 9.16667C1.83272 9.42578 1.92072 9.64364 2.09733 9.82025C2.27394 9.99686 2.4915 10.0846 2.75 10.0833ZM14.4036 3.40267C14.579 3.22789 14.6667 3.01033 14.6667 2.75C14.6667 2.48967 14.5787 2.27211 14.4027 2.09733C14.2267 1.92256 14.0091 1.83456 13.75 1.83333C13.4909 1.83211 13.2733 1.92011 13.0973 2.09733C12.9213 2.27456 12.8333 2.49211 12.8333 2.75C12.8333 3.00789 12.9213 3.22575 13.0973 3.40358C13.2733 3.58142 13.4909 3.66911 13.75 3.66667C14.0091 3.66422 14.227 3.57622 14.4036 3.40267Z' fill='black'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg width='17' height='19' viewBox='0 0 17 19' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M13.75 18.3333C12.9861 18.3333 12.3368 18.066 11.8021 17.5312C11.2674 16.9965 11 16.3472 11 15.5833C11 15.4917 11.0229 15.2778 11.0688 14.9417L4.62917 11.1833C4.38472 11.4125 4.10208 11.5922 3.78125 11.7223C3.46042 11.8525 3.11667 11.9173 2.75 11.9167C1.98611 11.9167 1.33681 11.6493 0.802083 11.1146C0.267361 10.5799 0 9.93056 0 9.16667C0 8.40278 0.267361 7.75347 0.802083 7.21875C1.33681 6.68403 1.98611 6.41667 2.75 6.41667C3.11667 6.41667 3.46042 6.48175 3.78125 6.61192C4.10208 6.74208 4.38472 6.92144 4.62917 7.15L11.0688 3.39167C11.0382 3.28472 11.0192 3.18175 11.0119 3.08275C11.0046 2.98375 11.0006 2.87283 11 2.75C11 1.98611 11.2674 1.33681 11.8021 0.802083C12.3368 0.267361 12.9861 0 13.75 0C14.5139 0 15.1632 0.267361 15.6979 0.802083C16.2326 1.33681 16.5 1.98611 16.5 2.75C16.5 3.51389 16.2326 4.16319 15.6979 4.69792C15.1632 5.23264 14.5139 5.5 13.75 5.5C13.3833 5.5 13.0396 5.43492 12.7188 5.30475C12.3979 5.17458 12.1153 4.99522 11.8708 4.76667L5.43125 8.525C5.46181 8.63194 5.48106 8.73522 5.489 8.83483C5.49694 8.93444 5.50061 9.04506 5.5 9.16667C5.49939 9.28828 5.49572 9.39919 5.489 9.49942C5.48228 9.59964 5.46303 9.70261 5.43125 9.80833L11.8708 13.5667C12.1153 13.3375 12.3979 13.1581 12.7188 13.0286C13.0396 12.899 13.3833 12.8339 13.75 12.8333C14.5139 12.8333 15.1632 13.1007 15.6979 13.6354C16.2326 14.1701 16.5 14.8194 16.5 15.5833C16.5 16.3472 16.2326 16.9965 15.6979 17.5312C15.1632 18.066 14.5139 18.3333 13.75 18.3333ZM13.75 16.5C14.0097 16.5 14.2276 16.4123 14.4036 16.2369C14.5796 16.0615 14.6673 15.8437 14.6667 15.5833C14.6661 15.323 14.5781 15.1054 14.4027 14.9307C14.2273 14.7559 14.0097 14.6679 13.75 14.6667C13.4903 14.6654 13.2727 14.7534 13.0973 14.9307C12.9219 15.1079 12.8339 15.3254 12.8333 15.5833C12.8327 15.8412 12.9207 16.0591 13.0973 16.2369C13.2739 16.4147 13.4915 16.5024 13.75 16.5ZM2.75 10.0833C3.00972 10.0833 3.22758 9.99533 3.40358 9.81933C3.57958 9.64333 3.66728 9.42578 3.66667 9.16667C3.66606 8.90756 3.57806 8.69 3.40267 8.514C3.22728 8.338 3.00972 8.25 2.75 8.25C2.49028 8.25 2.27272 8.338 2.09733 8.514C1.92194 8.69 1.83394 8.90756 1.83333 9.16667C1.83272 9.42578 1.92072 9.64364 2.09733 9.82025C2.27394 9.99686 2.4915 10.0846 2.75 10.0833ZM14.4036 3.40267C14.579 3.22789 14.6667 3.01033 14.6667 2.75C14.6667 2.48967 14.5787 2.27211 14.4027 2.09733C14.2267 1.92256 14.0091 1.83456 13.75 1.83333C13.4909 1.83211 13.2733 1.92011 13.0973 2.09733C12.9213 2.27456 12.8333 2.49211 12.8333 2.75C12.8333 3.00789 12.9213 3.22575 13.0973 3.40358C13.2733 3.58142 13.4909 3.66911 13.75 3.66667C14.0091 3.66422 14.227 3.57622 14.4036 3.40267Z' fill='black'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.btn-share::before {
+  background: var(--color-white);
+  left: 20px;
+  top: 50%;
+  width: 12px;
+  height: 14px;
+  transform: translateY(-50%);
+}
+
+.btn-share span {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-white);
+}
+
+/* Toast */
+.copy-toast {
+  border-radius: 0;
+  border: 1px solid rgba(62, 224, 255, 0.45);
+  background: rgba(6, 16, 32, 0.95);
+  color: var(--color-cyan);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 18px rgba(62, 224, 255, 0.15);
+}
+
+/* Share modal */
+.share-modal {
+  background: rgba(2, 8, 18, 0.72);
+  backdrop-filter: blur(4px);
+}
+
+/* Same HUD panel as EVENT 01 (.reward__box / __frame / __panel), rebuilt on the kit's
+   single dialog element: the dialog is the unclipped box (glow + accent bars),
+   ::before is the clipped frame ring + panel fill + inner hairline + dot pattern */
+.share-modal__dialog {
+  --panel-blue: #3f86fa;
+  --panel-bracket: #34a7ff;
+  --panel-bar: #3ed5ff;
+  --panel-line: rgba(63, 134, 250, 0.4);
+  --panel-fill: rgb(16, 26, 45);
+  --panel-clip: polygon(
+    18px 0, calc(50% - 125px) 0, calc(50% - 115px) 10px, calc(50% - 59px) 10px, calc(50% - 51px) 20px,
+    calc(50% + 51px) 20px, calc(50% + 59px) 10px, calc(50% + 115px) 10px, calc(50% + 125px) 0,
+    calc(100% - 18px) 0, 100% 18px, 100% calc(100% - 18px), calc(100% - 18px) 100%,
+    calc(50% + 125px) 100%, calc(50% + 115px) calc(100% - 10px), calc(50% + 59px) calc(100% - 10px), calc(50% + 51px) calc(100% - 20px),
+    calc(50% - 51px) calc(100% - 20px), calc(50% - 59px) calc(100% - 10px), calc(50% - 115px) calc(100% - 10px), calc(50% - 125px) 100%,
+    18px 100%, 0 calc(100% - 18px), 0 18px
+  );
+  isolation: isolate;
+  padding: 48px 32px 40px;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  filter: drop-shadow(0 0 6px rgba(63, 134, 250, 0.35));
+}
+
+.share-modal__dialog::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border: 2px solid transparent;
+  clip-path: var(--panel-clip);
+  background:
+    /* inner hairline */
+    linear-gradient(var(--panel-line) 0 0) left 20px top 8px / calc(100% - 40px) 1px no-repeat padding-box,
+    linear-gradient(var(--panel-line) 0 0) left 20px bottom 8px / calc(100% - 40px) 1px no-repeat padding-box,
+    linear-gradient(var(--panel-line) 0 0) left 8px top 20px / 1px calc(100% - 40px) no-repeat padding-box,
+    linear-gradient(var(--panel-line) 0 0) right 8px top 20px / 1px calc(100% - 40px) no-repeat padding-box,
+    /* dot pattern fading in toward the bottom */
+    linear-gradient(to bottom, var(--panel-fill) 6%, rgba(16, 26, 45, 0) 73%) padding-box,
+    radial-gradient(rgba(63, 134, 250, 0.14) 0.75px, transparent 0.9px) 0 0 / 7px 7px padding-box,
+    /* fill */
+    radial-gradient(ellipse 45% 40% at 50% 50%, rgba(7, 14, 28, 0.6), transparent) padding-box,
+    linear-gradient(var(--panel-fill) 0 0) padding-box,
+    /* frame ring with bright corner brackets */
+    linear-gradient(var(--panel-bracket) 0 0) top left / 30px 30px no-repeat border-box,
+    linear-gradient(var(--panel-bracket) 0 0) top right / 30px 30px no-repeat border-box,
+    linear-gradient(var(--panel-bracket) 0 0) bottom left / 30px 30px no-repeat border-box,
+    linear-gradient(var(--panel-bracket) 0 0) bottom right / 30px 30px no-repeat border-box,
+    linear-gradient(rgba(63, 134, 250, 0.45) 0 0) border-box;
+  box-shadow: inset 0 0 26px rgba(0, 120, 255, 0.45);
+}
+
+/* accent bars: top/bottom notch bars, left/right side bars */
+.share-modal__dialog::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(var(--panel-bar) 0 0) 50% 11px / 100px 4px no-repeat,
+    linear-gradient(var(--panel-bar) 0 0) 50% calc(100% - 11px) / 100px 4px no-repeat,
+    linear-gradient(var(--panel-bar) 0 0) 0 50% / 6px 70px no-repeat,
+    linear-gradient(var(--panel-bar) 0 0) 100% 50% / 6px 70px no-repeat;
+}
+
+@media (max-width: 480px) {
+  .share-modal__dialog { padding: 44px 22px 36px; }
+}
+
+.share-modal__title {
+  color: var(--color-white);
+  font-family: var(--font-display);
+}
+
+.share-modal__close {
+  top: 20px;
+  right: 20px;
+  border-radius: 0;
+  color: var(--color-cyan);
+}
+
+.share-modal__close:hover {
+  background: rgba(62, 224, 255, 0.12);
+}
+
+.share-item {
+  border-radius: 0;
+}
+
+.share-item:hover {
+  background: rgba(62, 224, 255, 0.08);
+}
+
+/* brand colours kept for recognisability, but in the chamfered HUD shape */
+.share-item__icon {
+  border-radius: 0;
+  clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+}
+
+.share-item--copy .share-item__icon {
+  background: rgba(62, 224, 255, 0.16);
+  color: var(--color-cyan);
+}
+
+.share-item__label {
+  color: var(--color-text-sub);
+}
+
+/* Mobile floating buttons appear only after the hero (script.js "Floating buttons after hero") */
+.mobile-fab {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px);
+  transition: opacity 0.2s, transform 0.2s, visibility 0s 0.2s;
+}
+
+.mobile-fab.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+/* Mobile floating buttons — square HUD tiles like the reference */
+.mobile-fab__btn {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border: 1px solid rgba(62, 224, 255, 0.55);
+  border-radius: 0;
+  background:
+    radial-gradient(rgba(140, 180, 230, 0.2) 0.8px, transparent 1px) 0 0 / 5px 5px,
+    rgba(6, 16, 32, 0.92);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45), 0 0 12px rgba(62, 224, 255, 0.18);
+}
+
+.mobile-fab__btn img {
+  visibility: hidden;
+}
+
+.mobile-fab__btn:not(.mobile-fab__btn--top)::before {
+  left: 50%;
+  top: 50%;
+  width: 18px;
+  height: 20px;
+  transform: translate(-50%, -50%);
+}
+
+.mobile-fab__btn--top,
+.mobile-fab__btn--top:hover {
+  background:
+    radial-gradient(rgba(140, 180, 230, 0.2) 0.8px, transparent 1px) 0 0 / 5px 5px,
+    rgba(6, 16, 32, 0.92);
+}
+
+.mobile-fab__btn--top span {
+  display: none;
+}
+
+/* chevron: two slanted bars meeting at the top */
+.mobile-fab__btn--top::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 20px;
+  height: 14px;
+  transform: translate(-50%, -60%);
+  background: linear-gradient(180deg, #8ff0ff, var(--color-cyan));
+  clip-path: polygon(50% 0, 100% 72%, 100% 100%, 50% 30%, 0 100%, 0 72%);
+}
+
+/* ============================================================
+   MOBILE QA — readable body text on phones
+   ============================================================ */
+@media (max-width: 480px) {
+  .hero__desc { font-size: 16px; }
+
+  /* titles: clearer step up from the 15–16px body text */
+  .hero__title { font-size: min(34px, 8.6vw); }
+  .sec-head__title { font-size: 30px; }
+  .reward .sec-head__title { font-size: min(26px, 6.4vw); } /* 강조 줄(최대 10,000 마일리지를 쟁탈하라!)이 한 줄에 들어가게 */
+  .step-card__title { font-size: 20px; }
+  .use-card__title,
+  .notice__title { font-size: 24px; }
+
+  /* even line lengths instead of one orphan word on the last line */
+  .hero__desc,
+  .sec-head__desc { text-wrap: balance; }
+
+  .reward__notes li { font-size: 14px; line-height: 1.6; }
+
+  .step-card__desc,
+  .use-card__desc { font-size: 15px; line-height: 1.65; }
+
+  .notice__list li { font-size: 15px; line-height: 1.65; }
+
+  /* room under the last section so the floating share/TOP buttons never cover text */
+  .notice { padding-bottom: 140px; }
+}
+
+/* ============================================================
+   참여 방법 02·03: Steam 패널 재현 (이미지 대신 코드, 한국어)
+   02 = 상점 페이지 "Playtest 참가" 회색 패널 / 03 = 승인 후 "지금 플레이" 초록 패널
+   크기는 카드 폭 기준(cqw)이라 PC/모바일 모두 같은 비율로 보임
+   ============================================================ */
+.steam-mock {
+  position: relative;
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  background: #1b2838;
+}
+.steam-mock__hero {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  background:
+    linear-gradient(180deg, rgba(27, 40, 56, 0) 50%, #1b2838 100%),
+    url("../images/main-2400.webp") center 30% / cover no-repeat;
+}
+/* .step-card__shot img(폭 100%·cover)보다 우선하도록 선택자를 한 단계 높임 */
+.steam-mock .steam-mock__logo {
+  width: 34cqw;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.6));
+}
+.steam-mock__panel {
+  display: flex;
+  flex-direction: column;
+  gap: 2cqw;
+  margin: 0 3cqw 3cqw;
+  padding: 3.4cqw 3.6cqw 3cqw;
+  border-radius: 1cqw;
+  font-family: "Pretendard", sans-serif;
+}
+.steam-mock--request .steam-mock__panel {
+  background: linear-gradient(90deg, #3a4857 0%, #57636f 100%);
+}
+.steam-mock--play .steam-mock__panel {
+  background: linear-gradient(90deg, #5d8d25 0%, #45701f 100%);
+}
+.steam-mock__ptitle {
+  color: #fff;
+  font-size: 4.6cqw;
+  font-weight: 600;
+  line-height: 1.2;
+}
+.steam-mock__row {
+  display: flex;
+  align-items: flex-end;
+  gap: 3cqw;
+}
+.steam-mock__pdesc {
+  flex: 1;
+  min-width: 0;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  font-size: 2.9cqw;
+  line-height: 1.35;
+}
+.steam-mock--request .steam-mock__pdesc { color: #b8c2cc; }
+.steam-mock--play .steam-mock__pdesc { color: #d6ebb8; }
+
+/* 초록 버튼 + 검은 테두리 (Steam 버튼 포커스 모양) */
+.steam-mock__btn {
+  position: relative;
+  flex: none;
+  padding: 2.2cqw 4cqw;
+  border: 0.6cqw solid #0b0f14;
+  border-radius: 0.8cqw;
+  background: linear-gradient(90deg, #79b528 0%, #5f9420 100%);
+  color: #e3f6c5;
+  font-size: 4cqw;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  animation: steamPulseGreen 2.4s ease-out infinite;
+}
+.steam-mock__cursor {
+  position: absolute;
+  right: -2.5cqw;
+  bottom: -4.5cqw;
+  width: 5.6cqw;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+  pointer-events: none;
+}
+@keyframes steamPulseGreen {
+  0%   { box-shadow: 0 0 0 0 rgba(164, 208, 7, 0.6); }
+  70%  { box-shadow: 0 0 0 2.6cqw rgba(164, 208, 7, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(164, 208, 7, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .steam-mock__btn { animation: none; }
+}
+
+/* 02 참가 신청 버튼: Steam 상점 "Playtest 참가하기" 버튼처럼
+   밝은 연두 그라데이션 + 연한 글자, 검은 테두리 없음, 패널 오른쪽 아래에 살짝 걸치게 */
+.steam-mock--request .steam-mock__btn {
+  margin-bottom: -5.4cqw;
+  padding: 2cqw 3.6cqw;
+  border: 0;
+  border-radius: 0.5cqw;
+  background: linear-gradient(90deg, #75b022 5%, #588a1b 95%);
+  box-shadow: 0 0 0 0.3cqw rgba(190, 238, 120, 0.35), 0 0.6cqw 1.6cqw rgba(0, 0, 0, 0.45);
+  color: #d2efa9;
+  font-size: 3.4cqw;
+  font-weight: 500;
+  animation: steamPulseLime 2.4s ease-out infinite;
+}
+.steam-mock--request .steam-mock__panel { padding-bottom: 4.6cqw; }
+@keyframes steamPulseLime {
+  0%   { box-shadow: 0 0 0 0.3cqw rgba(190, 238, 120, 0.35), 0 0 0 0 rgba(164, 208, 7, 0.55); }
+  70%  { box-shadow: 0 0 0 0.3cqw rgba(190, 238, 120, 0.35), 0 0 0 2.4cqw rgba(164, 208, 7, 0); }
+  100% { box-shadow: 0 0 0 0.3cqw rgba(190, 238, 120, 0.35), 0 0 0 0 rgba(164, 208, 7, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .steam-mock--request .steam-mock__btn { animation: none; }
+}
+
+/* ============================================================
+   참여 방법 03: Steam 라이브러리 화면 재현 (이미지 대신 코드, 한국어)
+   상단 탭(라이브러리 활성) / 왼쪽 게임 목록(타임 테이커즈 선택) / 오른쪽 키아트 + 초록 플레이 버튼
+   크기는 카드 폭 기준(cqw)이라 PC/모바일 모두 같은 비율로 보임
+   ============================================================ */
+.steam-lib {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  background: #171d25;
+  font-family: "Pretendard", sans-serif;
+  color: #c7d0d9;
+}
+.steam-lib__nav {
+  display: flex;
+  align-items: center;
+  gap: 5cqw;
+  padding: 0 3cqw;
+  height: 10cqw;
+  flex: none;
+  font-size: 3.4cqw;
+  font-weight: 600;
+  color: #dfe5ea;
+}
+.steam-lib__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.4cqw;
+  font-size: 2.9cqw;
+  font-weight: 500;
+  color: #c7d0d9;
+}
+.steam-lib__mark { width: 4cqw; height: 4cqw; }
+.steam-lib__tab { position: relative; line-height: 1; }
+.steam-lib__tab.is-active { color: #3fb6f5; }
+.steam-lib__tab.is-active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1.6cqw;
+  height: 0.7cqw;
+  border-radius: 1cqw;
+  background: #1a9fff;
+}
+.steam-lib__body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  gap: 0.6cqw;
+  padding: 0 1.2cqw 1.2cqw;
+}
+.steam-lib__side {
+  flex: 0 0 32%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6cqw;
+  background: #1e2532;
+}
+.steam-lib__select {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 6.4cqw;
+  padding: 0 2.2cqw;
+  background: #262e3b;
+  font-size: 2.9cqw;
+  font-weight: 600;
+}
+.steam-lib__select svg { width: 2.2cqw; color: #aab4be; }
+.steam-lib__search {
+  display: flex;
+  align-items: center;
+  gap: 2cqw;
+  padding: 0.6cqw 1.8cqw;
+}
+.steam-lib__input {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  height: 5cqw;
+  padding: 0 1.4cqw;
+  border: 0.2cqw solid #2f3846;
+  border-radius: 0.6cqw;
+  background: #12171e;
+}
+.steam-lib__input svg { width: 2.6cqw; color: #aab4be; }
+.steam-lib__filter { width: 2.8cqw; color: #aab4be; }
+.steam-lib__game {
+  display: flex;
+  align-items: center;
+  gap: 1.6cqw;
+  padding: 1.2cqw 2.2cqw;
+  background: #3d4c66;
+}
+.steam-lib__thumb {
+  flex: none;
+  width: 6.6cqw;
+  height: 6.6cqw;
+  border-radius: 0.6cqw;
+  background: url("../images/main-2400.webp") 50% 40% / cover no-repeat;
+}
+.steam-lib__gname {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4cqw;
+  min-width: 0;
+  font-size: 2.2cqw;
+  line-height: 1.15;
+  color: #b8c2cc;
+  white-space: nowrap;
+}
+.steam-lib__gname b { font-size: 2.8cqw; font-weight: 700; color: #fff; }
+.steam-lib__main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background: #1e2532;
+}
+.steam-lib__hero {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 1.6cqw;
+  background:
+    linear-gradient(180deg, rgba(10, 20, 35, 0) 55%, rgba(10, 20, 35, 0.55) 100%),
+    url("../images/main-2400.webp") center 35% / cover no-repeat;
+}
+/* .step-card__shot img(폭 100%·cover)보다 우선하도록 선택자를 한 단계 높임 */
+.steam-lib .steam-lib__logo {
+  width: 52%;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.6));
+}
+.steam-lib__action {
+  flex: none;
+  padding: 2.4cqw 3.4cqw;
+}
+.steam-lib__play {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2cqw;
+  height: 8.4cqw;
+  border-radius: 0.8cqw;
+  background: linear-gradient(180deg, #4fdf3a 0%, #2cbc22 100%);
+  color: #fff;
+  font-size: 4.4cqw;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  animation: steamPulseGreen 2.4s ease-out infinite;
+}
+.steam-lib__play > svg:first-child { width: 2.8cqw; }
+.steam-lib__cursor {
+  position: absolute;
+  right: 9%;
+  bottom: -2.6cqw;
+  width: 4.6cqw;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .steam-lib__play { animation: none; }
+}
